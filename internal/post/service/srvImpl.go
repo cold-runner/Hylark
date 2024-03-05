@@ -37,7 +37,7 @@ func (s *Srv) CreatePost(ctx context.Context, req *post.CreatePostRequest) (r *p
 		_, err = s.Repository.Category().Get(ctx, post_srv.Q.Category.ID.Eq(cid))
 		switch {
 		case errors.Is(err, gorm.ErrRecordNotFound):
-			return response.BizErrWithExtra(response.ErrBadRequest, response.BizErrExtra{"msg": "category id is illegal."})
+			return response.BizErr(response.ErrCategoryNotExist)
 		case err != nil:
 			return response.BizErr(response.ErrInternal)
 		}
@@ -64,7 +64,7 @@ func (s *Srv) CreatePost(ctx context.Context, req *post.CreatePostRequest) (r *p
 				_, err = s.Repository.Tag().Get(ctx, post_srv.Q.Tag.ID.Eq(tagId))
 				switch {
 				case errors.Is(err, gorm.ErrRecordNotFound):
-					sign <- response.BizErrWithExtra(response.ErrBadRequest, response.BizErrExtra{"msg": "tag is not exist."})
+					sign <- response.BizErr(response.ErrTagNotExist)
 				case err != nil:
 					sign <- response.BizErr(response.ErrInternal)
 				}
@@ -119,5 +119,5 @@ func (s *Srv) CreatePost(ctx context.Context, req *post.CreatePostRequest) (r *p
 		return nil, response.BizErr(response.ErrInternal)
 	}
 
-	return post.NewCreatePostResponse(), response.BizErr(response.ErrSuccess)
+	return post.NewCreatePostResponse(), nil
 }

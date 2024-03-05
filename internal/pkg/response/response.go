@@ -14,6 +14,8 @@ const (
 	ErrUserAlreadyExist
 	ErrUserNotExist
 	ErrSmsCodeIncorrect
+	ErrCategoryNotExist
+	ErrTagNotExist
 )
 
 var bizErrMap = map[BizErrCode]string{
@@ -23,6 +25,8 @@ var bizErrMap = map[BizErrCode]string{
 	ErrUserAlreadyExist:  "user already exist",
 	ErrUserNotExist:      "user not exist",
 	ErrSmsCodeIncorrect:  "sms code is incorrect",
+	ErrCategoryNotExist:  "category not exist",
+	ErrTagNotExist:       "tag not exist",
 }
 
 func BizErr(code BizErrCode) error {

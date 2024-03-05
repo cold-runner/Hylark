@@ -17,7 +17,8 @@ func NewStore(config *instance.MysqlConfig) store.Store {
 	if err != nil {
 		panic(errors.Errorf("cannot establish store connection: %v", err))
 	}
-	return &mysql{post_srv.Use(dbIns)}
+	post_srv.SetDefault(dbIns)
+	return &mysql{post_srv.Q}
 }
 
 func (m mysql) Post() store.PostStore {
