@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"context"
+
 	"github.com/cold-runner/Hylark/gorm_gen/user_srv"
 	"github.com/cold-runner/Hylark/gorm_gen/user_srv/model"
 	"github.com/cold-runner/Hylark/internal/pkg/instance"
@@ -21,7 +22,8 @@ func NewStore(config *instance.MysqlConfig) store.Store {
 	if err != nil {
 		panic(errors.Errorf("cannot establish store connection: %v", err))
 	}
-	return &mysql{user_srv.Use(dbIns)}
+	user_srv.SetDefault(dbIns)
+	return &mysql{user_srv.Q}
 }
 
 func (m mysql) Create(c context.Context, ov *model.Lark) error {

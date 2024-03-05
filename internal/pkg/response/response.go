@@ -8,15 +8,21 @@ type (
 )
 
 const (
-	ErrSuccess BizErrCode = iota + 100000
-	ErrInternal
+	ErrInternal BizErrCode = iota + 100001
 	ErrBadRequest
+	ErrPasswordIncorrect
+	ErrUserAlreadyExist
+	ErrUserNotExist
+	ErrSmsCodeIncorrect
 )
 
 var bizErrMap = map[BizErrCode]string{
-	ErrSuccess:    "ok",
-	ErrInternal:   "internal error",
-	ErrBadRequest: "bad request",
+	ErrInternal:          "internal error",
+	ErrBadRequest:        "bad request",
+	ErrPasswordIncorrect: "password is incorrect",
+	ErrUserAlreadyExist:  "user already exist",
+	ErrUserNotExist:      "user not exist",
+	ErrSmsCodeIncorrect:  "sms code is incorrect",
 }
 
 func BizErr(code BizErrCode) error {

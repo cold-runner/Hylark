@@ -19,9 +19,10 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "srv"
 	handlerType := (*user.Srv)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"Register":    kitex.NewMethodInfo(registerHandler, newSrvRegisterArgs, newSrvRegisterResult, false),
-		"SendSmsCode": kitex.NewMethodInfo(sendSmsCodeHandler, newSrvSendSmsCodeArgs, newSrvSendSmsCodeResult, false),
-		"Certificate": kitex.NewMethodInfo(certificateHandler, newSrvCertificateArgs, newSrvCertificateResult, false),
+		"Register":      kitex.NewMethodInfo(registerHandler, newSrvRegisterArgs, newSrvRegisterResult, false),
+		"SendSmsCode":   kitex.NewMethodInfo(sendSmsCodeHandler, newSrvSendSmsCodeArgs, newSrvSendSmsCodeResult, false),
+		"PasswordLogin": kitex.NewMethodInfo(passwordLoginHandler, newSrvPasswordLoginArgs, newSrvPasswordLoginResult, false),
+		"Certificate":   kitex.NewMethodInfo(certificateHandler, newSrvCertificateArgs, newSrvCertificateResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -74,6 +75,24 @@ func newSrvSendSmsCodeResult() interface{} {
 	return user.NewSrvSendSmsCodeResult()
 }
 
+func passwordLoginHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.SrvPasswordLoginArgs)
+	realResult := result.(*user.SrvPasswordLoginResult)
+	success, err := handler.(user.Srv).PasswordLogin(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSrvPasswordLoginArgs() interface{} {
+	return user.NewSrvPasswordLoginArgs()
+}
+
+func newSrvPasswordLoginResult() interface{} {
+	return user.NewSrvPasswordLoginResult()
+}
+
 func certificateHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	realArg := arg.(*user.SrvCertificateArgs)
 	realResult := result.(*user.SrvCertificateResult)
@@ -117,6 +136,16 @@ func (p *kClient) SendSmsCode(ctx context.Context, req *user.SendSmsCodeRequest)
 	_args.Req = req
 	var _result user.SrvSendSmsCodeResult
 	if err = p.c.Call(ctx, "SendSmsCode", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest) (r *user.PasswordLoginResponse, err error) {
+	var _args user.SrvPasswordLoginArgs
+	_args.Req = req
+	var _result user.SrvPasswordLoginResult
+	if err = p.c.Call(ctx, "PasswordLogin", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

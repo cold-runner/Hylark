@@ -16,5 +16,10 @@ func newLarkFactory(s store.Store) *larkFactory {
 }
 
 func (l larkFactory) Produce(c context.Context, cond ...gen.Condition) (*entity.Lark, error) {
-	panic("impl me")
+	row, err := l.storeIns.Query(c, cond...)
+	if err != nil {
+		return nil, err
+	}
+	ety := &entity.Lark{}
+	return ety.Instantiate(row), nil
 }

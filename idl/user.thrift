@@ -19,6 +19,15 @@ struct SendSmsCodeResponse {
     1: optional string code
 }
 
+struct PasswordLoginRequest {
+    1: optional string phone
+    2: optional string password
+}
+
+struct PasswordLoginResponse {
+    1: optional string token
+}
+
 struct CertificateRequest {
     1: optional string phone
     2: optional binary stu_card_photo

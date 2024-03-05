@@ -35,7 +35,7 @@ create index deleted_at
 insert into lark (id, created_at, deleted_at, updated_at, stu_num, password, name, gender, college, major, grade,
                   stu_card_url, phone, province, age, photo_url, email, introduce, avatar, qq_union_id, wechat_union_id,
                   state)
-values ("84a392ab-4426-4f3f-b7bf-d3dbdc3f21bb","2024-03-01 10:12:45",null,null,"20999004","salkdjflkasdjfl;a","郑赫","男","软件学院", "计算机科学与技术","大四","https://static.skylab.org.cn/test.jpg","18342728255","辽宁",23,null,"zzzheng80@gmail.com","即将毕业，祝安好",null,null,null,1);
+values ("84a392ab-4426-4f3f-b7bf-d3dbdc3f21bb","2024-03-01 10:12:45",null,null,"20999004","$2a$10$.XIBpMjG9DPKcOP25.6WEuVsTF.vPZSDlx8s3O/V8Gyfuenb9Ftpi","郑赫","男","软件学院", "计算机科学与技术","大四","https://static.skylab.org.cn/test.jpg","18342728255","辽宁",23,null,"zzzheng80@gmail.com","即将毕业，祝安好",null,null,null,1);
 
 create table user_interaction
 (

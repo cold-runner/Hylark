@@ -8,9 +8,9 @@ import (
 	"github.com/cold-runner/Hylark/internal/user/factory"
 	"github.com/cold-runner/Hylark/internal/user/repository"
 	"github.com/cold-runner/Hylark/kitex_gen/user"
-
 	"github.com/pkg/errors"
 	"github.com/spf13/viper"
+	"time"
 )
 
 type Srv struct {
@@ -26,7 +26,16 @@ type Srv struct {
 	Config
 }
 
+type JwtConfig struct {
+	Key        string        `mapstructure:"key"`
+	Algorithm  string        `mapstructure:"algorithm"`
+	Issuer     string        `mapstructure:"issuer"`
+	ExpireTime time.Duration `mapstructure:"expire-time"`
+	Subject    string        `mapstructure:"subject"`
+}
+
 type Config struct {
+	JwtConfig                 `mapstructure:"jwt"`
 	instance.MysqlConfig      `mapstructure:"mysql"`
 	instance.RedisConfig      `mapstructure:"redis"`
 	instance.TencentSmsConfig `mapstructure:"tencent-sms"`

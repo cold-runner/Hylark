@@ -11,12 +11,12 @@ services:
     ports:
       - "6379:6379"
   db:
-    image: "mysql:8.0"
+    image: "mysql:8.3.0"
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: mysecret
     volumes:
-      - ../../script/lark.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../../script/sql/lark/lark.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - user_srv_network
     ports:

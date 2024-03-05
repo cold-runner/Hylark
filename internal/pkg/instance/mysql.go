@@ -22,11 +22,11 @@ type MysqlConfig struct {
 
 // NewMySQL create a new gorm store instance with the given options.
 func NewMySQL(opts *MysqlConfig) (*gorm.DB, error) {
-	dsn := fmt.Sprintf(`%s:%s@tcp(%s)/?charset=utf8&parseTime=%t&loc=%s`,
+	dsn := fmt.Sprintf(`%s:%s@tcp(%s)/%s?charset=utf8&parseTime=%t&loc=%s`,
 		opts.User,
 		opts.Password,
 		opts.Host,
-		//opts.Database,
+		opts.Database,
 		true,
 		"Local",
 	)

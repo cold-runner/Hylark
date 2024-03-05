@@ -13,6 +13,7 @@ import (
 type Client interface {
 	Register(ctx context.Context, req *user.RegisterRequest, callOptions ...callopt.Option) (r *user.RegisterResponse, err error)
 	SendSmsCode(ctx context.Context, req *user.SendSmsCodeRequest, callOptions ...callopt.Option) (r *user.SendSmsCodeResponse, err error)
+	PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest, callOptions ...callopt.Option) (r *user.PasswordLoginResponse, err error)
 	Certificate(ctx context.Context, req *user.CertificateRequest, callOptions ...callopt.Option) (r *user.CertificateResponse, err error)
 }
 
@@ -53,6 +54,11 @@ func (p *kSrvClient) Register(ctx context.Context, req *user.RegisterRequest, ca
 func (p *kSrvClient) SendSmsCode(ctx context.Context, req *user.SendSmsCodeRequest, callOptions ...callopt.Option) (r *user.SendSmsCodeResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.SendSmsCode(ctx, req)
+}
+
+func (p *kSrvClient) PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest, callOptions ...callopt.Option) (r *user.PasswordLoginResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.PasswordLogin(ctx, req)
 }
 
 func (p *kSrvClient) Certificate(ctx context.Context, req *user.CertificateRequest, callOptions ...callopt.Option) (r *user.CertificateResponse, err error) {

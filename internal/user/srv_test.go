@@ -2,8 +2,6 @@ package user
 
 import (
 	"context"
-	"testing"
-
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/kerrors"
 	"github.com/cloudwego/kitex/pkg/transmeta"
@@ -11,46 +9,50 @@ import (
 	"github.com/cold-runner/Hylark/internal/pkg"
 	"github.com/cold-runner/Hylark/kitex_gen/user"
 	"github.com/cold-runner/Hylark/kitex_gen/user/srv"
+	"testing"
 )
 
-func TestSrv_Register(t *testing.T) {
-	c := srv.MustNewClient("srv",
+func TestRegister(t *testing.T) {
+	cli := srv.MustNewClient("userSrv",
 		client.WithHostPorts(":8888"),
-		client.WithTransportProtocol(transport.TTHeader),
 		client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 	)
-	ctx := context.Background()
-	req := &user.RegisterRequest{
-		Phone:    pkg.Convert("18342728255"),
-		Password: pkg.Convert("Aa123443"),
-		SmsCode:  pkg.Convert("1218"),
-	}
 
-	resp, err := c.Register(ctx, req)
-	bizErr, isBizErr := kerrors.FromBizStatusError(err)
-	if isBizErr {
-		t.Logf("%v, extra: %v", bizErr, bizErr.BizExtra()["msg"])
+	req := &user.RegisterRequest{
+		Phone:    pkg.Convert("13942321313"),
+		Password: pkg.Convert("Aa123654"),
+		SmsCode:  pkg.Convert("123123"),
+	}
+	resp, err := cli.Register(context.Background(), req)
+	if resp == nil {
+		t.Errorf("err: %v", err)
 		return
 	}
 
-	t.Logf("register called success! resp: %v", resp)
-
+	t.Logf("%#v", resp)
 }
 
-func Test_SendSmsCode(t *testing.T) {
-	c := srv.MustNewClient("srv",
+func TestPhonePasswordLogin(t *testing.T) {
+	cli := srv.MustNewClient("srv",
 		client.WithHostPorts(":8888"),
 		client.WithTransportProtocol(transport.TTHeader),
 		client.WithMetaHandler(transmeta.ClientTTHeaderHandler),
 	)
-	ctx := context.Background()
-	resp, err := c.SendSmsCode(ctx, &user.SendSmsCodeRequest{Phone: pkg.Convert("18342728255")})
 
-	bizErr, isBizErr := kerrors.FromBizStatusError(err)
-	if isBizErr {
-		// 判断是否是成功响应
-		t.Logf("%v, extra: %v", bizErr, bizErr.BizExtra()["msg"])
-		return
+	req := &user.PasswordLoginRequest{
+		Phone:    pkg.Convert("18342728255"),
+		Password: pkg.Convert("Aa12365"),
 	}
-	t.Logf("register called success! resp: %v", resp)
+	resp, err := cli.PasswordLogin(context.Background(), req)
+
+	if err != nil {
+		bizErr, isBizErr := kerrors.FromBizStatusError(err)
+		if isBizErr {
+			t.Errorf("biz err occured! err: %v", bizErr)
+			return
+		}
+		t.Errorf("rpc call err! err: %v", err)
+	}
+
+	t.Logf("%v", resp.GetToken())
 }

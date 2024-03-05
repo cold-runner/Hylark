@@ -14,8 +14,9 @@ type Lark struct {
 	// 其他必须字段
 }
 
-func (l *Lark) Instantiate(row *model.Lark) {
+func (l *Lark) Instantiate(row *model.Lark) *Lark {
 	l.row = row
+	return l
 }
 
 func (l *Lark) UploadStuCard(c context.Context, oss oss.Oss, data []byte) error {
