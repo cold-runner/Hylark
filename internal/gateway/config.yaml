@@ -1,0 +1,23 @@
+server:
+  host: 0.0.0.0
+  port: 7599
+  tls:
+    use: false
+    CA:
+    certificate:
+    privateKey:
+
+auth:
+  use: true
+  identityKey:
+  key:
+  timeout:
+  maxRefresh:
+
+limiter:
+  use: true
+
+log:
+  level: debug
+  output: stdout
+  format: console

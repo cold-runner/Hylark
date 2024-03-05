@@ -1,0 +1,41 @@
+FROM golang:1.22.0 AS dependency
+
+RUN go env -w GOPROXY=https://goproxy.cn,direct
+RUN go install github.com/go-delve/delve/cmd/dlv@v1.22.1
+RUN go install github.com/cloudwego/thriftgo@v0.3.6
+RUN go install github.com/cloudwego/kitex/tool/cmd/kitex@v0.8.0
+
+WORKDIR /app
+
+COPY go.mod go.sum ./
+
+RUN go mod download && go mod verify
+
+FROM dependency AS build
+
+WORKDIR /app
+
+COPY idl ./
+RUN /go/bin/kitex -module github.com/cold-runner/Hylark userSrv.thrift
+
+COPY script/sql/lark cmd/gorm-gen/main.go ./
+ENV SQL_FILE_NAME=lark.sql
+ENV SERVICE_NAME=user_srv
+RUN go run main.go
+
+COPY internal/user ./internal/user/
+COPY internal/pkg ./internal/pkg/
+
+COPY cmd/userSrv/main.go ./userSrv/
+RUN CGO_ENABLED=0 GOOS=linux go build -o /usr/local/bin/app -gcflags all="-N -l" ./userSrv
+
+FROM golang:1.22.0
+
+WORKDIR /app
+
+COPY script/wait-for-it.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
+COPY --from=dependency /go/bin/dlv /go/bin/
+COPY --from=build /usr/local/bin/app /usr/local/bin/
+COPY internal/user/config.yaml ./

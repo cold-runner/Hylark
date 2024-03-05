@@ -1,0 +1,23 @@
+apiList:
+  - apiInfo:
+      name: 注册
+      path: /user/create
+      method: post
+      description: 用户注册
+      mws:
+        - limiter:
+            param1: 123
+            param2: 456
+
+  - apiInfo:
+      name: 查看评论
+      path: /comment/query
+      method: get
+      description: 查看评论
+      mws:
+        - limiter:
+            param1: 1
+            param2: 2
+        - fuse:
+            param1: 3
+            param2:

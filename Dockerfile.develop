@@ -1,0 +1,25 @@
+FROM golang:1.22.0 AS build
+
+RUN go install github.com/go-delve/delve/cmd/dlv@latest
+
+WORKDIR /app
+
+COPY go.mod go.sum cmd/userSrv/main.go ./
+COPY kitex_gen ./kitex_gen
+COPY gorm_gen ./gorm_gen
+COPY internal/user ./internal/user/
+COPY internal/pkg ./internal/pkg/
+COPY script/wait-for-it.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/wait-for-it.sh
+
+RUN go mod download && go mod verify
+
+RUN CGO_ENABLED=0 GOOS=linux go build -gcflags all=-N -l -v -o /usr/local/bin/app .
+
+FROM golang:1.22.0
+
+WORKDIR /app
+
+COPY --from=build /usr/local/bin/wait-for-it.sh /usr/local/bin/app /usr/local/bin/
+COPY --from=build /go/bin/dlv /go/bin/
+COPY --from=build /app/internal/user/config.yaml ./

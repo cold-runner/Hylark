@@ -1,0 +1,32 @@
+mysql:
+  host:
+  user:
+  password:
+  database: hylark_post
+  max-idle-connections:
+  max-open-connections:
+  max-connection-life-time:
+  log-level: 1
+redis:
+  host:
+  port:
+  user:
+  password:
+  database:
+  master-name:
+  optimisation-max-idle:
+  optimisation-max-active:
+  timeout:
+  enable-cluster:
+  use-SSL:
+  SSL-insecure-skip-verify:
+upyun:
+  bucket:
+  operator:
+  password:
+  use-http:
+zinc:
+  host:
+  user:
+  password:
+  use-https:

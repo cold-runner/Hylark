@@ -1,0 +1,49 @@
+version: '3.1'
+
+networks:
+    user_srv_network:
+      driver: bridge
+services:
+  redis:
+    image: "redis:7.2"
+    networks:
+      - user_srv_network
+    ports:
+      - "6379:6379"
+  db:
+    image: "mysql:8.0"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecret
+    volumes:
+      - ../../script/lark.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - user_srv_network
+    ports:
+      - "3306:3306"
+  user_service_debug:
+    build:
+      context: ../../
+      dockerfile: internal/user/Dockerfile.develop
+    cap_add:
+      # dlv 调试需要
+      - SYS_PTRACE
+    security_opt:
+      # 要在没有安全配置文件的情况下运行容器
+      - apparmor=unconfined
+    environment:
+      - MODE=debug
+    depends_on:
+      - db
+      - redis
+    command: ["wait-for-it.sh", "db:3306", "--",
+              "/go/bin/dlv", "--listen=:2345",
+                "--headless=true",
+                "--api-version=2",
+                "--accept-multiclient",
+              "exec", "/usr/local/bin/app"]
+    networks:
+      - user_srv_network
+    ports:
+      - "2345:2345"
+      - "8888:8888"

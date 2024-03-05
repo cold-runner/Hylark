@@ -1,0 +1,59 @@
+name: Tests
+
+on: [push, pull_request]
+
+jobs:
+  compat-test:
+    strategy:
+      matrix:
+        version: ["1.20"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.version }}
+
+      # Just build tests without running them
+      - name: Build Test
+        run: go test -run=nope ./...
+
+  test:
+    strategy:
+      matrix:
+        version: ["1.20"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.version }}
+
+      - name: Golangci Lint
+        # https://golangci-lint.run/
+        uses: golangci/golangci-lint-action@v4
+        with:
+          version: latest
+          skip-cache: true
+      - name: Unit Test
+        run: go test -race -covermode=atomic -coverprofile=coverage.txt ./...
+
+  test-windows:
+    strategy:
+      matrix:
+        version: ["1.20"]
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.version }}
+
+      - name: Unit Test
+        run: go test -race -covermode=atomic  ./...

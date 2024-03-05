@@ -1,0 +1,33 @@
+mysql:
+  host:
+  user:
+  password:
+  database: hylark_user
+  max-idle-connections:
+  max-open-connections:
+  max-connection-life-time:
+  log-level: 1
+redis:
+  host:
+  port:
+  user:
+  password:
+  database: 0
+  master-name:
+  optimisation-max-idle:
+  optimisation-max-active:
+  timeout:
+  enable-cluster:
+  use-SSL:
+  SSL-insecure-skip-verify:
+tencent-sms:
+  secret-id:
+  secret-key:
+  application-id:
+  sign-name:
+  template-id:
+upyun:
+  bucket:
+  operator:
+  password:
+  use-http:

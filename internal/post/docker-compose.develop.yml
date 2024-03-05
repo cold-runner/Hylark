@@ -1,0 +1,52 @@
+version: '3.1'
+
+services:
+  redis:
+    image: "redis:7.2"
+    expose:
+      - "6379"
+  db:
+    image: "mysql:8.0"
+    environment:
+      MYSQL_ROOT_PASSWORD: mysecret
+    volumes:
+      - ../../script/sql/post/table.sql:/docker-entrypoint-initdb.d/init.sql
+    expose:
+      - "3306"
+  search-engine:
+    image: "public.ecr.aws/zinclabs/zincsearch"
+    environment:
+      ZINC_DATA_PATH: /data
+      ZINC_FIRST_ADMIN_USER: admin
+      ZINC_FIRST_ADMIN_PASSWORD: Complexpass#123
+    volumes:
+      - ./zinc/data:/data
+    expose:
+      - "4080"
+
+  post_service_debug:
+    build:
+      context: ../../
+      dockerfile: internal/post/Dockerfile.develop
+    cap_add:
+      # dlv 调试需要
+      - SYS_PTRACE
+    security_opt:
+      # 要在没有安全配置文件的情况下运行容器
+      - apparmor=unconfined
+    environment:
+      - MODE=debug
+    depends_on:
+      - db
+      - redis
+      - search-engine
+    command:  ["wait-for-it.sh", "db:3306", "--",
+               "/go/bin/dlv", "--listen=:2345",
+               "--headless=true",
+               "--api-version=2",
+               "--continue",
+               "--accept-multiclient",
+               "exec", "/usr/local/bin/app"]
+    ports:
+      - "2344:2345"
+      - "8887:8888"
