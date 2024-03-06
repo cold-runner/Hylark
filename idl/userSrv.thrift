@@ -8,4 +8,5 @@ service srv {
     user.PasswordLoginResponse PasswordLogin(user.PasswordLoginRequest req)
     user.CertificateResponse Certificate(user.CertificateRequest req)
     user.UpdateUserInfoResponse UpdateUserInfo(user.UpdateUserInfoRequest req)
+    user.FollowResponse Follow(user.FollowRequest req)
 }

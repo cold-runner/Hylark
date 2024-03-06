@@ -22,39 +22,46 @@ var (
 	c = context.Background()
 )
 
-func TestRegister(t *testing.T) {
-	req := &user.RegisterRequest{
-		Phone:    pkg.Convert("13942321313"),
-		Password: pkg.Convert("Aa123654"),
-		SmsCode:  pkg.Convert("123124"),
-	}
-	resp, err := cli.Register(c, req)
-	if resp == nil {
-		t.Errorf("err: %v", err)
-		return
-	}
-
-	t.Logf("%#v", resp)
-}
-
-func TestPhonePasswordLogin(t *testing.T) {
-	req := &user.PasswordLoginRequest{
-		Phone:    pkg.Convert("13942321313"),
-		Password: pkg.Convert("Aa123654"),
-	}
-	resp, err := cli.PasswordLogin(c, req)
-
+func errorHandler(t *testing.T, err error) bool {
 	if err != nil {
 		bizErr, isBizErr := kerrors.FromBizStatusError(err)
 		if !isBizErr {
 			t.Errorf("rpc call failed. err: %v", err)
-			return
+			return true
 		}
 		t.Errorf("biz err occured. err: %v, extra: %v", bizErr, bizErr.BizExtra())
+		return true
+	}
+	return false
+}
+
+func TestRegister(t *testing.T) {
+	req := &user.RegisterRequest{
+		Phone:    pkg.Convert("13974749182"),
+		Password: pkg.Convert("Aa123654"),
+		SmsCode:  pkg.Convert("123124"),
+	}
+	resp, err := cli.Register(c, req)
+
+	if errorHandler(t, err) {
 		return
 	}
 
-	t.Logf("%v", resp.GetToken())
+	t.Logf("%v", resp.String())
+}
+
+func TestPhonePasswordLogin(t *testing.T) {
+	req := &user.PasswordLoginRequest{
+		Phone:    pkg.Convert("13974749182"),
+		Password: pkg.Convert("Aa123654"),
+	}
+	resp, err := cli.PasswordLogin(c, req)
+
+	if errorHandler(t, err) {
+		return
+	}
+
+	t.Logf("%#v", resp.GetToken())
 }
 
 func TestUpdateInfo(t *testing.T) {
@@ -71,13 +78,22 @@ func TestUpdateInfo(t *testing.T) {
 	}
 
 	resp, err := cli.UpdateUserInfo(c, req)
-	if err != nil {
-		bizErr, isBizErr := kerrors.FromBizStatusError(err)
-		if !isBizErr {
-			t.Errorf("rpc call failed. err: %v", err)
-			return
-		}
-		t.Errorf("biz err occured. err: %v, extra: %v", bizErr, bizErr.BizExtra())
+
+	if errorHandler(t, err) {
+		return
+	}
+
+	fmt.Println(resp.String())
+}
+
+func TestFollow(t *testing.T) {
+	req := &user.FollowRequest{
+		Token:  pkg.Convert("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1dWlkIjoiZjI1NjU0NDItM2E0OC00MTc4LTgyMmEtNjRhMTczOWNlZTcxIiwiaXNzIjoic2t5bGFiLUh5bGFyayIsInN1YiI6InNreWxhYiIsImV4cCI6MTcwOTcyODA0NH0.fWbURpfHWKBhpHA9pWDFaDQ2hhW3SSl58XaB6aEFS8s"),
+		UserId: pkg.Convert("84a392ab-4426-4f3f-b7bf-d3dbdc3f21bb"),
+	}
+	resp, err := cli.Follow(c, req)
+
+	if errorHandler(t, err) {
 		return
 	}
 

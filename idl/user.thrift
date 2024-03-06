@@ -50,3 +50,11 @@ struct UpdateUserInfoRequest {
 
 struct UpdateUserInfoResponse {
 }
+
+struct FollowRequest {
+    1: optional string token
+    2: optional string user_id
+}
+
+struct FollowResponse {
+}

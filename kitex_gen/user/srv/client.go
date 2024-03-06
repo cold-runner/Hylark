@@ -16,6 +16,7 @@ type Client interface {
 	PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest, callOptions ...callopt.Option) (r *user.PasswordLoginResponse, err error)
 	Certificate(ctx context.Context, req *user.CertificateRequest, callOptions ...callopt.Option) (r *user.CertificateResponse, err error)
 	UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error)
+	Follow(ctx context.Context, req *user.FollowRequest, callOptions ...callopt.Option) (r *user.FollowResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -70,4 +71,9 @@ func (p *kSrvClient) Certificate(ctx context.Context, req *user.CertificateReque
 func (p *kSrvClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.UpdateUserInfo(ctx, req)
+}
+
+func (p *kSrvClient) Follow(ctx context.Context, req *user.FollowRequest, callOptions ...callopt.Option) (r *user.FollowResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.Follow(ctx, req)
 }

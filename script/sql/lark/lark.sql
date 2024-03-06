@@ -9,13 +9,13 @@ create table lark
     created_at      datetime     not null comment '创建时间',
     deleted_at      datetime     null comment '删除时间（软删除）',
     updated_at      datetime     null comment '更新时间',
-    stu_num         char(8)      unique not null comment '学号',
-    password        char(255)   not null comment '密码',
-    name            varchar(30)  not null comment '姓名',
+    stu_num         char(8)      unique null comment '学号',
+    password        char(255)    not null comment '密码',
+    name            varchar(30)  null comment '姓名',
     gender          varchar(10)  default '保密' not null comment '用户性别：女，男，其他，保密',
-    college         varchar(30)  not null comment '用户所在学院',
-    major           varchar(30)  not null comment '用户专业',
-    grade           varchar(10)  not null comment '用户年级：大一，大二，大三，大四，研究生,毕业生',
+    college         varchar(30)  null comment '用户所在学院',
+    major           varchar(30)  null comment '用户专业',
+    grade           varchar(10)  null comment '用户年级：大一，大二，大三，大四，研究生,毕业生',
     stu_card_url    varchar(255) unique not null comment '学生证照片url',
     phone           char(11)     unique not null comment '用户手机号',
     province        varchar(10)  null comment '用户家乡省份',
@@ -32,11 +32,6 @@ create table lark
 create index deleted_at
     on lark (deleted_at);
 
-insert into lark (id, created_at, deleted_at, updated_at, stu_num, password, name, gender, college, major, grade,
-                  stu_card_url, phone, province, age, photo_url, email, introduce, avatar, qq_union_id, wechat_union_id,
-                  state)
-values ("84a392ab-4426-4f3f-b7bf-d3dbdc3f21bb","2024-03-01 10:12:45",null,null,"20999004","$2a$10$.XIBpMjG9DPKcOP25.6WEuVsTF.vPZSDlx8s3O/V8Gyfuenb9Ftpi","郑赫","男","软件学院", "计算机科学与技术","大四","https://static.skylab.org.cn/test.jpg","18342728255","辽宁",23,null,"zzzheng80@gmail.com","即将毕业，祝安好",null,null,null,1);
-
 create table user_interaction
 (
     id          char(36) not null comment '自然主键'
@@ -45,10 +40,21 @@ create table user_interaction
     deleted_at  datetime null comment '删除时间（软删除）',
     updated_at  datetime null comment '更新时间',
     user_id     char(36) not null comment 'subject',
-    followed_id char(36) not null comment 'object'
+    followed_id char(36) not null comment 'object',
+    constraint user_interaction_pk
+        unique (user_id, followed_id)
 )
     comment '社交关系表';
 
 create index deleted_at
     on user_interaction (deleted_at);
 
+insert into lark (id, created_at, deleted_at, updated_at, stu_num, password, name, gender, college, major, grade,
+                  stu_card_url, phone, province, age, photo_url, email, introduction, avatar, qq_union_id, wechat_union_id,
+                  state)
+values ("84a392ab-4426-4f3f-b7bf-d3dbdc3f21bb","2024-03-01 10:12:45",null,null,"20999004","$2a$10$.XIBpMjG9DPKcOP25.6WEuVsTF.vPZSDlx8s3O/V8Gyfuenb9Ftpi","郑赫","男","软件学院", "计算机科学与技术","大四","https://static.skylab.org.cn/test.jpg","18342728255","辽宁",23,null,"zzzheng80@gmail.com","即将毕业，祝安好",null,null,null,1);
+
+insert into lark (id, created_at, deleted_at, updated_at, stu_num, password, name, gender, college, major, grade,
+                  stu_card_url, phone, province, age, photo_url, email, introduction, avatar, qq_union_id, wechat_union_id,
+                  state)
+values ("f2565442-3a48-4178-822a-64a1739cee71","2024-02-01 10:10:45",null,null,"","$2a$10$.XIBpMjG9DPKcOP25.6WEuVsTF.vPZSDlx8s3O/V8Gyfuenb9Ftpi","路人甲","男","美术与设计学院", "专业","大二","https://static.skylab.org.cn/test1.jpg","13974749182","北京",23,null,"asdf@sdsaf.com","未来可期",null,null,null,1);
