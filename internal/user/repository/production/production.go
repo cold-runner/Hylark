@@ -9,6 +9,10 @@ type repo struct {
 	storeIns store.Store
 }
 
+func (r repo) Social() repository.SocialRepository {
+	return newSocial(r.storeIns)
+}
+
 func (r repo) Lark() repository.LarkRepository {
 	return newLarkRepository(r.storeIns)
 }

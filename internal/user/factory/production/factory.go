@@ -9,14 +9,14 @@ type prodFactory struct {
 	storeIns store.Store
 }
 
-func (f prodFactory) GetStore() store.Store {
-	return f.storeIns
-}
-
 func NewFactory(s store.Store) factory.Factory {
 	return &prodFactory{storeIns: s}
 }
 
 func (f prodFactory) Lark() factory.LarkFactory {
 	return newLarkFactory(f.storeIns)
+}
+
+func (f prodFactory) GetStore() store.Store {
+	return f.storeIns
 }

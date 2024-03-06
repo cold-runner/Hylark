@@ -34,7 +34,7 @@ func (s *Srv) Register(ctx context.Context, req *user.RegisterRequest) (r *user.
 		switch {
 		case err != nil:
 			klog.Infof("validate sms code failed! err: %v", err)
-			return response.BizErr(response.ErrInternal)
+			return response.BizErr(response.ErrSmsCodeIncorrect)
 		case !correct:
 			klog.Infof("sms code is incorrect! err: %v", err)
 			return response.BizErr(response.ErrSmsCodeIncorrect)
@@ -183,20 +183,11 @@ func (s *Srv) Certificate(ctx context.Context, req *user.CertificateRequest) (r 
 func (s *Srv) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (r *user.UpdateUserInfoResponse, err error) {
 	var userId string
 	if err = func(request *user.UpdateUserInfoRequest) error {
-		t, err := jwt.ParseWithClaims(req.GetToken(), &HylarkTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
-			return []byte(s.Config.JwtConfig.Key), nil
-		})
+		claims, err := s.validateToken(req)
 		if err != nil {
-			return response.BizErr(response.ErrInternal)
+			return err
 		}
-		if !t.Valid {
-			return response.BizErr(response.ErrTokenInvalid)
-		}
-		if claims, ok := t.Claims.(*HylarkTokenClaims); ok {
-			userId = claims.UUID
-		} else {
-			return response.BizErr(response.ErrTokenInvalid)
-		}
+		userId = claims.UUID
 		gender := req.GetGender()
 		if gender != "男" && gender != "女" && gender != "保密" {
 			klog.Infof("gender is illegal")
@@ -237,4 +228,36 @@ func (s *Srv) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoReques
 		return nil, response.BizErr(response.ErrInternal)
 	}
 	return user.NewUpdateUserInfoResponse(), nil
+}
+
+func (s *Srv) Follow(ctx context.Context, req *user.FollowRequest) (r *user.FollowResponse, err error) {
+	var subjectId string
+	if err = func(*user.FollowRequest) error {
+		claims, err := s.validateToken(req)
+		if err != nil {
+			return response.BizErr(response.ErrTokenInvalid)
+		}
+		subjectId = claims.UUID
+		return nil
+	}(req); err != nil {
+		return nil, err
+	}
+
+	uid, _ := uuid.Parse(subjectId)
+	entity, err := s.Factory.Lark().Produce(ctx, user_srv.Q.Lark.ID.Eq(uid))
+	if err != nil {
+		klog.Errorf("create entity failed. err: %v", err)
+		return nil, response.BizErr(response.ErrInternal)
+	}
+	err = entity.Follow(ctx, s.Repository, subjectId, req.GetUserId())
+	switch {
+	case errors.Is(err, gorm.ErrDuplicatedKey):
+		klog.Infof("user already follow.")
+		return nil, response.BizErr(response.ErrAlreadyFollow)
+	case err != nil:
+		klog.Errorf("follow user failed. err: %v, subject: %v, object: %v", err, subjectId, req.GetUserId())
+		return nil, response.BizErr(response.ErrInternal)
+	}
+
+	return user.NewFollowResponse(), nil
 }

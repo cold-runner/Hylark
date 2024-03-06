@@ -17,6 +17,7 @@ const (
 	ErrSmsCodeIncorrect
 	ErrCategoryNotExist
 	ErrTagNotExist
+	ErrAlreadyFollow
 )
 
 var bizErrMap = map[BizErrCode]string{
@@ -29,6 +30,7 @@ var bizErrMap = map[BizErrCode]string{
 	ErrSmsCodeIncorrect:  "sms code is incorrect",
 	ErrCategoryNotExist:  "category not exist",
 	ErrTagNotExist:       "tag not exist",
+	ErrAlreadyFollow:     "already follow",
 }
 
 func BizErr(code BizErrCode) error {

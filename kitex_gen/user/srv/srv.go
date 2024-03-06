@@ -24,6 +24,7 @@ func NewServiceInfo() *kitex.ServiceInfo {
 		"PasswordLogin":  kitex.NewMethodInfo(passwordLoginHandler, newSrvPasswordLoginArgs, newSrvPasswordLoginResult, false),
 		"Certificate":    kitex.NewMethodInfo(certificateHandler, newSrvCertificateArgs, newSrvCertificateResult, false),
 		"UpdateUserInfo": kitex.NewMethodInfo(updateUserInfoHandler, newSrvUpdateUserInfoArgs, newSrvUpdateUserInfoResult, false),
+		"Follow":         kitex.NewMethodInfo(followHandler, newSrvFollowArgs, newSrvFollowResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -130,6 +131,24 @@ func newSrvUpdateUserInfoResult() interface{} {
 	return user.NewSrvUpdateUserInfoResult()
 }
 
+func followHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.SrvFollowArgs)
+	realResult := result.(*user.SrvFollowResult)
+	success, err := handler.(user.Srv).Follow(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSrvFollowArgs() interface{} {
+	return user.NewSrvFollowArgs()
+}
+
+func newSrvFollowResult() interface{} {
+	return user.NewSrvFollowResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -185,6 +204,16 @@ func (p *kClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRe
 	_args.Req = req
 	var _result user.SrvUpdateUserInfoResult
 	if err = p.c.Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) Follow(ctx context.Context, req *user.FollowRequest) (r *user.FollowResponse, err error) {
+	var _args user.SrvFollowArgs
+	_args.Req = req
+	var _result user.SrvFollowResult
+	if err = p.c.Call(ctx, "Follow", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

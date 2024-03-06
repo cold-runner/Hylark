@@ -3,10 +3,11 @@ package entity
 import (
 	"bytes"
 	"context"
-	"github.com/cold-runner/Hylark/internal/pkg"
-
 	"github.com/cold-runner/Hylark/gorm_gen/user_srv/model"
+	"github.com/cold-runner/Hylark/internal/pkg"
 	"github.com/cold-runner/Hylark/internal/pkg/infrastructure/oss"
+	"github.com/cold-runner/Hylark/internal/user/repository"
+	"github.com/google/uuid"
 )
 
 type Lark struct {
@@ -39,4 +40,16 @@ func (l *Lark) IsCertificate() bool {
 
 func (l *Lark) IsLegal() bool {
 	return l.row.State == 0
+}
+
+func (l *Lark) Follow(c context.Context, repo repository.Repository, subjectId, objectId string) error {
+	social := &model.UserInteraction{
+		ID:         uuid.New(),
+		UserID:     subjectId,
+		FollowedID: objectId,
+	}
+	if err := repo.Social().Persist(c, social); err != nil {
+		return err
+	}
+	return nil
 }
