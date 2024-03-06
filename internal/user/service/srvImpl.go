@@ -109,7 +109,7 @@ func (s *Srv) PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest)
 	switch {
 	case errors.Is(err, gorm.ErrRecordNotFound):
 		klog.Infof("user not exist. phone: %v", req.GetPhone())
-		return nil, response.BizErr(response.ErrUserAlreadyExist)
+		return nil, response.BizErr(response.ErrUserNotExist)
 	case err != nil:
 		klog.Errorf("unknow err. err: %v", err)
 		return nil, response.BizErr(response.ErrInternal)
@@ -121,11 +121,13 @@ func (s *Srv) PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest)
 		return nil, response.BizErr(response.ErrPasswordIncorrect)
 	}
 
-	t := jwt.NewWithClaims(jwt.GetSigningMethod(s.Config.JwtConfig.Algorithm), jwt.MapClaims{
-		"iss": s.Config.JwtConfig.Issuer,
-		"sub": s.Config.JwtConfig.Subject,
-		"exp": s.Config.JwtConfig.ExpireTime * time.Minute,
-		"uid": row.GetRow().ID.String(),
+	t := jwt.NewWithClaims(jwt.GetSigningMethod(s.Config.JwtConfig.Algorithm), HylarkTokenClaims{
+		UUID: row.GetRow().ID.String(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			Issuer:    s.Config.JwtConfig.Issuer,
+			Subject:   s.Config.JwtConfig.Subject,
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(s.Config.JwtConfig.ExpireTime * time.Minute)),
+		},
 	})
 	str, err := t.SignedString([]byte(s.Config.JwtConfig.Key))
 	if err != nil {
@@ -176,4 +178,63 @@ func (s *Srv) Certificate(ctx context.Context, req *user.CertificateRequest) (r 
 
 	// TODO 通知管理员进行认证
 	return user.NewCertificateResponse(), nil
+}
+
+func (s *Srv) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (r *user.UpdateUserInfoResponse, err error) {
+	var userId string
+	if err = func(request *user.UpdateUserInfoRequest) error {
+		t, err := jwt.ParseWithClaims(req.GetToken(), &HylarkTokenClaims{}, func(token *jwt.Token) (interface{}, error) {
+			return []byte(s.Config.JwtConfig.Key), nil
+		})
+		if err != nil {
+			return response.BizErr(response.ErrInternal)
+		}
+		if !t.Valid {
+			return response.BizErr(response.ErrTokenInvalid)
+		}
+		if claims, ok := t.Claims.(*HylarkTokenClaims); ok {
+			userId = claims.UUID
+		} else {
+			return response.BizErr(response.ErrTokenInvalid)
+		}
+		gender := req.GetGender()
+		if gender != "男" && gender != "女" && gender != "保密" {
+			klog.Infof("gender is illegal")
+			return response.BizErrWithExtra(response.ErrBadRequest, response.BizErrExtra{"msg": "gender is illegal"})
+		}
+		// TODO 学院校验
+		// TODO 专业校验
+		reg, _ := regexp2.Compile(`^(大一|大二|大三|大四|研究生|毕业生)$`, 0)
+		if match, _ := reg.MatchString(req.GetGrade()); !match {
+			klog.Infof("grade is illegal")
+			return response.BizErrWithExtra(response.ErrBadRequest, response.BizErrExtra{"msg": "grade is illegal"})
+		}
+		// TODO 省份校验
+		// TODO 年龄校验
+		// TODO 个人介绍校验
+		return nil
+	}(req); err != nil {
+		return nil, err
+	}
+	id, err := uuid.Parse(userId)
+	row := &model.Lark{
+		ID:           id,
+		UpdatedAt:    time.Now(),
+		Gender:       nil,
+		College:      req.GetCollege(),
+		Major:        req.GetMajor(),
+		Grade:        req.GetGrade(),
+		Province:     req.GetProvince(),
+		Age:          int32(req.GetAge()),
+		Introduction: req.GetIntroduction(),
+		Avatar:       pkg.Convert(req.GetAvatar()),
+	}
+	err = s.Repository.Lark().Update(ctx, row)
+	switch {
+	case errors.Is(err, gorm.ErrRecordNotFound):
+		return nil, response.BizErr(response.ErrUserNotExist)
+	case err != nil:
+		return nil, response.BizErr(response.ErrInternal)
+	}
+	return user.NewUpdateUserInfoResponse(), nil
 }

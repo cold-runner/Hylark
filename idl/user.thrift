@@ -36,3 +36,17 @@ struct CertificateRequest {
 struct CertificateResponse {
 }
 
+struct UpdateUserInfoRequest {
+    1: optional string token
+    2: optional string gender
+    3: optional string college
+    4: optional string major
+    5: optional string grade
+    6: optional string province
+    7: optional i8 age
+    8: optional string introduction
+    9: optional string avatar
+}
+
+struct UpdateUserInfoResponse {
+}

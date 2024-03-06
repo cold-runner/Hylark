@@ -44,7 +44,7 @@ func newLark(db *gorm.DB, opts ...gen.DOOption) lark {
 	_lark.Age = field.NewInt32(tableName, "age")
 	_lark.PhotoURL = field.NewString(tableName, "photo_url")
 	_lark.Email = field.NewString(tableName, "email")
-	_lark.Introduce = field.NewString(tableName, "introduce")
+	_lark.Introduction = field.NewString(tableName, "introduction")
 	_lark.Avatar = field.NewString(tableName, "avatar")
 	_lark.QqUnionID = field.NewString(tableName, "qq_union_id")
 	_lark.WechatUnionID = field.NewString(tableName, "wechat_union_id")
@@ -77,7 +77,7 @@ type lark struct {
 	Age           field.Int32  // 用户年龄
 	PhotoURL      field.String // 照片url
 	Email         field.String // 邮箱地址
-	Introduce     field.String // 用户个人介绍
+	Introduction  field.String // 用户个人介绍
 	Avatar        field.String // 用户头像url
 	QqUnionID     field.String // qq社会化登录
 	WechatUnionID field.String // 微信社会化登录
@@ -115,7 +115,7 @@ func (l *lark) updateTableName(table string) *lark {
 	l.Age = field.NewInt32(table, "age")
 	l.PhotoURL = field.NewString(table, "photo_url")
 	l.Email = field.NewString(table, "email")
-	l.Introduce = field.NewString(table, "introduce")
+	l.Introduction = field.NewString(table, "introduction")
 	l.Avatar = field.NewString(table, "avatar")
 	l.QqUnionID = field.NewString(table, "qq_union_id")
 	l.WechatUnionID = field.NewString(table, "wechat_union_id")
@@ -154,7 +154,7 @@ func (l *lark) fillFieldMap() {
 	l.fieldMap["age"] = l.Age
 	l.fieldMap["photo_url"] = l.PhotoURL
 	l.fieldMap["email"] = l.Email
-	l.fieldMap["introduce"] = l.Introduce
+	l.fieldMap["introduction"] = l.Introduction
 	l.fieldMap["avatar"] = l.Avatar
 	l.fieldMap["qq_union_id"] = l.QqUnionID
 	l.fieldMap["wechat_union_id"] = l.WechatUnionID

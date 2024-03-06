@@ -9,6 +9,7 @@ type (
 
 const (
 	ErrInternal BizErrCode = iota + 100001
+	ErrTokenInvalid
 	ErrBadRequest
 	ErrPasswordIncorrect
 	ErrUserAlreadyExist
@@ -20,6 +21,7 @@ const (
 
 var bizErrMap = map[BizErrCode]string{
 	ErrInternal:          "internal error",
+	ErrTokenInvalid:      "token is invalid",
 	ErrBadRequest:        "bad request",
 	ErrPasswordIncorrect: "password is incorrect",
 	ErrUserAlreadyExist:  "user already exist",

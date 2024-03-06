@@ -33,6 +33,7 @@ services:
       - apparmor=unconfined
     environment:
       - MODE=debug
+      - TZ=Asia/Shanghai
     depends_on:
       - db
       - redis

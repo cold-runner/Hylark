@@ -15,6 +15,7 @@ type Client interface {
 	SendSmsCode(ctx context.Context, req *user.SendSmsCodeRequest, callOptions ...callopt.Option) (r *user.SendSmsCodeResponse, err error)
 	PasswordLogin(ctx context.Context, req *user.PasswordLoginRequest, callOptions ...callopt.Option) (r *user.PasswordLoginResponse, err error)
 	Certificate(ctx context.Context, req *user.CertificateRequest, callOptions ...callopt.Option) (r *user.CertificateResponse, err error)
+	UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -64,4 +65,9 @@ func (p *kSrvClient) PasswordLogin(ctx context.Context, req *user.PasswordLoginR
 func (p *kSrvClient) Certificate(ctx context.Context, req *user.CertificateRequest, callOptions ...callopt.Option) (r *user.CertificateResponse, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.Certificate(ctx, req)
+}
+
+func (p *kSrvClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest, callOptions ...callopt.Option) (r *user.UpdateUserInfoResponse, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.UpdateUserInfo(ctx, req)
 }

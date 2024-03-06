@@ -19,10 +19,11 @@ func NewServiceInfo() *kitex.ServiceInfo {
 	serviceName := "srv"
 	handlerType := (*user.Srv)(nil)
 	methods := map[string]kitex.MethodInfo{
-		"Register":      kitex.NewMethodInfo(registerHandler, newSrvRegisterArgs, newSrvRegisterResult, false),
-		"SendSmsCode":   kitex.NewMethodInfo(sendSmsCodeHandler, newSrvSendSmsCodeArgs, newSrvSendSmsCodeResult, false),
-		"PasswordLogin": kitex.NewMethodInfo(passwordLoginHandler, newSrvPasswordLoginArgs, newSrvPasswordLoginResult, false),
-		"Certificate":   kitex.NewMethodInfo(certificateHandler, newSrvCertificateArgs, newSrvCertificateResult, false),
+		"Register":       kitex.NewMethodInfo(registerHandler, newSrvRegisterArgs, newSrvRegisterResult, false),
+		"SendSmsCode":    kitex.NewMethodInfo(sendSmsCodeHandler, newSrvSendSmsCodeArgs, newSrvSendSmsCodeResult, false),
+		"PasswordLogin":  kitex.NewMethodInfo(passwordLoginHandler, newSrvPasswordLoginArgs, newSrvPasswordLoginResult, false),
+		"Certificate":    kitex.NewMethodInfo(certificateHandler, newSrvCertificateArgs, newSrvCertificateResult, false),
+		"UpdateUserInfo": kitex.NewMethodInfo(updateUserInfoHandler, newSrvUpdateUserInfoArgs, newSrvUpdateUserInfoResult, false),
 	}
 	extra := map[string]interface{}{
 		"PackageName":     "user",
@@ -111,6 +112,24 @@ func newSrvCertificateResult() interface{} {
 	return user.NewSrvCertificateResult()
 }
 
+func updateUserInfoHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	realArg := arg.(*user.SrvUpdateUserInfoArgs)
+	realResult := result.(*user.SrvUpdateUserInfoResult)
+	success, err := handler.(user.Srv).UpdateUserInfo(ctx, realArg.Req)
+	if err != nil {
+		return err
+	}
+	realResult.Success = success
+	return nil
+}
+func newSrvUpdateUserInfoArgs() interface{} {
+	return user.NewSrvUpdateUserInfoArgs()
+}
+
+func newSrvUpdateUserInfoResult() interface{} {
+	return user.NewSrvUpdateUserInfoResult()
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -156,6 +175,16 @@ func (p *kClient) Certificate(ctx context.Context, req *user.CertificateRequest)
 	_args.Req = req
 	var _result user.SrvCertificateResult
 	if err = p.c.Call(ctx, "Certificate", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateUserInfo(ctx context.Context, req *user.UpdateUserInfoRequest) (r *user.UpdateUserInfoResponse, err error) {
+	var _args user.SrvUpdateUserInfoArgs
+	_args.Req = req
+	var _result user.SrvUpdateUserInfoResult
+	if err = p.c.Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

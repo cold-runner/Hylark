@@ -7,4 +7,5 @@ service srv {
     user.SendSmsCodeResponse SendSmsCode(user.SendSmsCodeRequest req)
     user.PasswordLoginResponse PasswordLogin(user.PasswordLoginRequest req)
     user.CertificateResponse Certificate(user.CertificateRequest req)
+    user.UpdateUserInfoResponse UpdateUserInfo(user.UpdateUserInfoRequest req)
 }

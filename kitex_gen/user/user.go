@@ -1549,3 +1549,858 @@ func (p *CertificateResponse) DeepEqual(ano *CertificateResponse) bool {
 	}
 	return true
 }
+
+type UpdateUserInfoRequest struct {
+	Token        *string `thrift:"token,1,optional" frugal:"1,optional,string" json:"token,omitempty"`
+	Gender       *string `thrift:"gender,2,optional" frugal:"2,optional,string" json:"gender,omitempty"`
+	College      *string `thrift:"college,3,optional" frugal:"3,optional,string" json:"college,omitempty"`
+	Major        *string `thrift:"major,4,optional" frugal:"4,optional,string" json:"major,omitempty"`
+	Grade        *string `thrift:"grade,5,optional" frugal:"5,optional,string" json:"grade,omitempty"`
+	Province     *string `thrift:"province,6,optional" frugal:"6,optional,string" json:"province,omitempty"`
+	Age          *int8   `thrift:"age,7,optional" frugal:"7,optional,i8" json:"age,omitempty"`
+	Introduction *string `thrift:"introduction,8,optional" frugal:"8,optional,string" json:"introduction,omitempty"`
+	Avatar       *string `thrift:"avatar,9,optional" frugal:"9,optional,string" json:"avatar,omitempty"`
+}
+
+func NewUpdateUserInfoRequest() *UpdateUserInfoRequest {
+	return &UpdateUserInfoRequest{}
+}
+
+func (p *UpdateUserInfoRequest) InitDefault() {
+	*p = UpdateUserInfoRequest{}
+}
+
+var UpdateUserInfoRequest_Token_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetToken() (v string) {
+	if !p.IsSetToken() {
+		return UpdateUserInfoRequest_Token_DEFAULT
+	}
+	return *p.Token
+}
+
+var UpdateUserInfoRequest_Gender_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetGender() (v string) {
+	if !p.IsSetGender() {
+		return UpdateUserInfoRequest_Gender_DEFAULT
+	}
+	return *p.Gender
+}
+
+var UpdateUserInfoRequest_College_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetCollege() (v string) {
+	if !p.IsSetCollege() {
+		return UpdateUserInfoRequest_College_DEFAULT
+	}
+	return *p.College
+}
+
+var UpdateUserInfoRequest_Major_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetMajor() (v string) {
+	if !p.IsSetMajor() {
+		return UpdateUserInfoRequest_Major_DEFAULT
+	}
+	return *p.Major
+}
+
+var UpdateUserInfoRequest_Grade_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetGrade() (v string) {
+	if !p.IsSetGrade() {
+		return UpdateUserInfoRequest_Grade_DEFAULT
+	}
+	return *p.Grade
+}
+
+var UpdateUserInfoRequest_Province_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetProvince() (v string) {
+	if !p.IsSetProvince() {
+		return UpdateUserInfoRequest_Province_DEFAULT
+	}
+	return *p.Province
+}
+
+var UpdateUserInfoRequest_Age_DEFAULT int8
+
+func (p *UpdateUserInfoRequest) GetAge() (v int8) {
+	if !p.IsSetAge() {
+		return UpdateUserInfoRequest_Age_DEFAULT
+	}
+	return *p.Age
+}
+
+var UpdateUserInfoRequest_Introduction_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetIntroduction() (v string) {
+	if !p.IsSetIntroduction() {
+		return UpdateUserInfoRequest_Introduction_DEFAULT
+	}
+	return *p.Introduction
+}
+
+var UpdateUserInfoRequest_Avatar_DEFAULT string
+
+func (p *UpdateUserInfoRequest) GetAvatar() (v string) {
+	if !p.IsSetAvatar() {
+		return UpdateUserInfoRequest_Avatar_DEFAULT
+	}
+	return *p.Avatar
+}
+func (p *UpdateUserInfoRequest) SetToken(val *string) {
+	p.Token = val
+}
+func (p *UpdateUserInfoRequest) SetGender(val *string) {
+	p.Gender = val
+}
+func (p *UpdateUserInfoRequest) SetCollege(val *string) {
+	p.College = val
+}
+func (p *UpdateUserInfoRequest) SetMajor(val *string) {
+	p.Major = val
+}
+func (p *UpdateUserInfoRequest) SetGrade(val *string) {
+	p.Grade = val
+}
+func (p *UpdateUserInfoRequest) SetProvince(val *string) {
+	p.Province = val
+}
+func (p *UpdateUserInfoRequest) SetAge(val *int8) {
+	p.Age = val
+}
+func (p *UpdateUserInfoRequest) SetIntroduction(val *string) {
+	p.Introduction = val
+}
+func (p *UpdateUserInfoRequest) SetAvatar(val *string) {
+	p.Avatar = val
+}
+
+var fieldIDToName_UpdateUserInfoRequest = map[int16]string{
+	1: "token",
+	2: "gender",
+	3: "college",
+	4: "major",
+	5: "grade",
+	6: "province",
+	7: "age",
+	8: "introduction",
+	9: "avatar",
+}
+
+func (p *UpdateUserInfoRequest) IsSetToken() bool {
+	return p.Token != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetGender() bool {
+	return p.Gender != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetCollege() bool {
+	return p.College != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetMajor() bool {
+	return p.Major != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetGrade() bool {
+	return p.Grade != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetProvince() bool {
+	return p.Province != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetAge() bool {
+	return p.Age != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetIntroduction() bool {
+	return p.Introduction != nil
+}
+
+func (p *UpdateUserInfoRequest) IsSetAvatar() bool {
+	return p.Avatar != nil
+}
+
+func (p *UpdateUserInfoRequest) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 2:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField2(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 3:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField3(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 4:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField4(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 5:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField5(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 6:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField6(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 7:
+			if fieldTypeId == thrift.BYTE {
+				if err = p.ReadField7(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 8:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField8(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		case 9:
+			if fieldTypeId == thrift.STRING {
+				if err = p.ReadField9(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_UpdateUserInfoRequest[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) ReadField1(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Token = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField2(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Gender = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField3(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.College = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField4(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Major = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField5(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Grade = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField6(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Province = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField7(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadByte(); err != nil {
+		return err
+	} else {
+		p.Age = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField8(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Introduction = &v
+	}
+	return nil
+}
+func (p *UpdateUserInfoRequest) ReadField9(iprot thrift.TProtocol) error {
+
+	if v, err := iprot.ReadString(); err != nil {
+		return err
+	} else {
+		p.Avatar = &v
+	}
+	return nil
+}
+
+func (p *UpdateUserInfoRequest) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("UpdateUserInfoRequest"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+		if err = p.writeField2(oprot); err != nil {
+			fieldId = 2
+			goto WriteFieldError
+		}
+		if err = p.writeField3(oprot); err != nil {
+			fieldId = 3
+			goto WriteFieldError
+		}
+		if err = p.writeField4(oprot); err != nil {
+			fieldId = 4
+			goto WriteFieldError
+		}
+		if err = p.writeField5(oprot); err != nil {
+			fieldId = 5
+			goto WriteFieldError
+		}
+		if err = p.writeField6(oprot); err != nil {
+			fieldId = 6
+			goto WriteFieldError
+		}
+		if err = p.writeField7(oprot); err != nil {
+			fieldId = 7
+			goto WriteFieldError
+		}
+		if err = p.writeField8(oprot); err != nil {
+			fieldId = 8
+			goto WriteFieldError
+		}
+		if err = p.writeField9(oprot); err != nil {
+			fieldId = 9
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField1(oprot thrift.TProtocol) (err error) {
+	if p.IsSetToken() {
+		if err = oprot.WriteFieldBegin("token", thrift.STRING, 1); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Token); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField2(oprot thrift.TProtocol) (err error) {
+	if p.IsSetGender() {
+		if err = oprot.WriteFieldBegin("gender", thrift.STRING, 2); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Gender); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField3(oprot thrift.TProtocol) (err error) {
+	if p.IsSetCollege() {
+		if err = oprot.WriteFieldBegin("college", thrift.STRING, 3); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.College); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField4(oprot thrift.TProtocol) (err error) {
+	if p.IsSetMajor() {
+		if err = oprot.WriteFieldBegin("major", thrift.STRING, 4); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Major); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 4 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField5(oprot thrift.TProtocol) (err error) {
+	if p.IsSetGrade() {
+		if err = oprot.WriteFieldBegin("grade", thrift.STRING, 5); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Grade); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 5 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField6(oprot thrift.TProtocol) (err error) {
+	if p.IsSetProvince() {
+		if err = oprot.WriteFieldBegin("province", thrift.STRING, 6); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Province); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 6 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField7(oprot thrift.TProtocol) (err error) {
+	if p.IsSetAge() {
+		if err = oprot.WriteFieldBegin("age", thrift.BYTE, 7); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteByte(*p.Age); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 7 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField8(oprot thrift.TProtocol) (err error) {
+	if p.IsSetIntroduction() {
+		if err = oprot.WriteFieldBegin("introduction", thrift.STRING, 8); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Introduction); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 8 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) writeField9(oprot thrift.TProtocol) (err error) {
+	if p.IsSetAvatar() {
+		if err = oprot.WriteFieldBegin("avatar", thrift.STRING, 9); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := oprot.WriteString(*p.Avatar); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 9 end error: ", p), err)
+}
+
+func (p *UpdateUserInfoRequest) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("UpdateUserInfoRequest(%+v)", *p)
+
+}
+
+func (p *UpdateUserInfoRequest) DeepEqual(ano *UpdateUserInfoRequest) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Token) {
+		return false
+	}
+	if !p.Field2DeepEqual(ano.Gender) {
+		return false
+	}
+	if !p.Field3DeepEqual(ano.College) {
+		return false
+	}
+	if !p.Field4DeepEqual(ano.Major) {
+		return false
+	}
+	if !p.Field5DeepEqual(ano.Grade) {
+		return false
+	}
+	if !p.Field6DeepEqual(ano.Province) {
+		return false
+	}
+	if !p.Field7DeepEqual(ano.Age) {
+		return false
+	}
+	if !p.Field8DeepEqual(ano.Introduction) {
+		return false
+	}
+	if !p.Field9DeepEqual(ano.Avatar) {
+		return false
+	}
+	return true
+}
+
+func (p *UpdateUserInfoRequest) Field1DeepEqual(src *string) bool {
+
+	if p.Token == src {
+		return true
+	} else if p.Token == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Token, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field2DeepEqual(src *string) bool {
+
+	if p.Gender == src {
+		return true
+	} else if p.Gender == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Gender, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field3DeepEqual(src *string) bool {
+
+	if p.College == src {
+		return true
+	} else if p.College == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.College, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field4DeepEqual(src *string) bool {
+
+	if p.Major == src {
+		return true
+	} else if p.Major == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Major, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field5DeepEqual(src *string) bool {
+
+	if p.Grade == src {
+		return true
+	} else if p.Grade == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Grade, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field6DeepEqual(src *string) bool {
+
+	if p.Province == src {
+		return true
+	} else if p.Province == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Province, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field7DeepEqual(src *int8) bool {
+
+	if p.Age == src {
+		return true
+	} else if p.Age == nil || src == nil {
+		return false
+	}
+	if *p.Age != *src {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field8DeepEqual(src *string) bool {
+
+	if p.Introduction == src {
+		return true
+	} else if p.Introduction == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Introduction, *src) != 0 {
+		return false
+	}
+	return true
+}
+func (p *UpdateUserInfoRequest) Field9DeepEqual(src *string) bool {
+
+	if p.Avatar == src {
+		return true
+	} else if p.Avatar == nil || src == nil {
+		return false
+	}
+	if strings.Compare(*p.Avatar, *src) != 0 {
+		return false
+	}
+	return true
+}
+
+type UpdateUserInfoResponse struct {
+}
+
+func NewUpdateUserInfoResponse() *UpdateUserInfoResponse {
+	return &UpdateUserInfoResponse{}
+}
+
+func (p *UpdateUserInfoResponse) InitDefault() {
+	*p = UpdateUserInfoResponse{}
+}
+
+var fieldIDToName_UpdateUserInfoResponse = map[int16]string{}
+
+func (p *UpdateUserInfoResponse) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+		if err = iprot.Skip(fieldTypeId); err != nil {
+			goto SkipFieldTypeError
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+SkipFieldTypeError:
+	return thrift.PrependError(fmt.Sprintf("%T skip field type %d error", p, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *UpdateUserInfoResponse) Write(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteStructBegin("UpdateUserInfoResponse"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *UpdateUserInfoResponse) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("UpdateUserInfoResponse(%+v)", *p)
+
+}
+
+func (p *UpdateUserInfoResponse) DeepEqual(ano *UpdateUserInfoResponse) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	return true
+}

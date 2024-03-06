@@ -16,6 +16,8 @@ type Srv interface {
 	PasswordLogin(ctx context.Context, req *PasswordLoginRequest) (r *PasswordLoginResponse, err error)
 
 	Certificate(ctx context.Context, req *CertificateRequest) (r *CertificateResponse, err error)
+
+	UpdateUserInfo(ctx context.Context, req *UpdateUserInfoRequest) (r *UpdateUserInfoResponse, err error)
 }
 
 type SrvClient struct {
@@ -80,6 +82,15 @@ func (p *SrvClient) Certificate(ctx context.Context, req *CertificateRequest) (r
 	}
 	return _result.GetSuccess(), nil
 }
+func (p *SrvClient) UpdateUserInfo(ctx context.Context, req *UpdateUserInfoRequest) (r *UpdateUserInfoResponse, err error) {
+	var _args SrvUpdateUserInfoArgs
+	_args.Req = req
+	var _result SrvUpdateUserInfoResult
+	if err = p.Client_().Call(ctx, "UpdateUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
 
 type SrvProcessor struct {
 	processorMap map[string]thrift.TProcessorFunction
@@ -105,6 +116,7 @@ func NewSrvProcessor(handler Srv) *SrvProcessor {
 	self.AddToProcessorMap("SendSmsCode", &srvProcessorSendSmsCode{handler: handler})
 	self.AddToProcessorMap("PasswordLogin", &srvProcessorPasswordLogin{handler: handler})
 	self.AddToProcessorMap("Certificate", &srvProcessorCertificate{handler: handler})
+	self.AddToProcessorMap("UpdateUserInfo", &srvProcessorUpdateUserInfo{handler: handler})
 	return self
 }
 func (p *SrvProcessor) Process(ctx context.Context, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
@@ -300,6 +312,54 @@ func (p *srvProcessorCertificate) Process(ctx context.Context, seqId int32, ipro
 		result.Success = retval
 	}
 	if err2 = oprot.WriteMessageBegin("Certificate", thrift.REPLY, seqId); err2 != nil {
+		err = err2
+	}
+	if err2 = result.Write(oprot); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.WriteMessageEnd(); err == nil && err2 != nil {
+		err = err2
+	}
+	if err2 = oprot.Flush(ctx); err == nil && err2 != nil {
+		err = err2
+	}
+	if err != nil {
+		return
+	}
+	return true, err
+}
+
+type srvProcessorUpdateUserInfo struct {
+	handler Srv
+}
+
+func (p *srvProcessorUpdateUserInfo) Process(ctx context.Context, seqId int32, iprot, oprot thrift.TProtocol) (success bool, err thrift.TException) {
+	args := SrvUpdateUserInfoArgs{}
+	if err = args.Read(iprot); err != nil {
+		iprot.ReadMessageEnd()
+		x := thrift.NewTApplicationException(thrift.PROTOCOL_ERROR, err.Error())
+		oprot.WriteMessageBegin("UpdateUserInfo", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return false, err
+	}
+
+	iprot.ReadMessageEnd()
+	var err2 error
+	result := SrvUpdateUserInfoResult{}
+	var retval *UpdateUserInfoResponse
+	if retval, err2 = p.handler.UpdateUserInfo(ctx, args.Req); err2 != nil {
+		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing UpdateUserInfo: "+err2.Error())
+		oprot.WriteMessageBegin("UpdateUserInfo", thrift.EXCEPTION, seqId)
+		x.Write(oprot)
+		oprot.WriteMessageEnd()
+		oprot.Flush(ctx)
+		return true, err2
+	} else {
+		result.Success = retval
+	}
+	if err2 = oprot.WriteMessageBegin("UpdateUserInfo", thrift.REPLY, seqId); err2 != nil {
 		err = err2
 	}
 	if err2 = result.Write(oprot); err == nil && err2 != nil {
@@ -1670,6 +1730,346 @@ func (p *SrvCertificateResult) DeepEqual(ano *SrvCertificateResult) bool {
 }
 
 func (p *SrvCertificateResult) Field0DeepEqual(src *CertificateResponse) bool {
+
+	if !p.Success.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SrvUpdateUserInfoArgs struct {
+	Req *UpdateUserInfoRequest `thrift:"req,1" frugal:"1,default,UpdateUserInfoRequest" json:"req"`
+}
+
+func NewSrvUpdateUserInfoArgs() *SrvUpdateUserInfoArgs {
+	return &SrvUpdateUserInfoArgs{}
+}
+
+func (p *SrvUpdateUserInfoArgs) InitDefault() {
+	*p = SrvUpdateUserInfoArgs{}
+}
+
+var SrvUpdateUserInfoArgs_Req_DEFAULT *UpdateUserInfoRequest
+
+func (p *SrvUpdateUserInfoArgs) GetReq() (v *UpdateUserInfoRequest) {
+	if !p.IsSetReq() {
+		return SrvUpdateUserInfoArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+func (p *SrvUpdateUserInfoArgs) SetReq(val *UpdateUserInfoRequest) {
+	p.Req = val
+}
+
+var fieldIDToName_SrvUpdateUserInfoArgs = map[int16]string{
+	1: "req",
+}
+
+func (p *SrvUpdateUserInfoArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *SrvUpdateUserInfoArgs) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 1:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField1(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SrvUpdateUserInfoArgs[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoArgs) ReadField1(iprot thrift.TProtocol) error {
+	p.Req = NewUpdateUserInfoRequest()
+	if err := p.Req.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SrvUpdateUserInfoArgs) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("UpdateUserInfo_args"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField1(oprot); err != nil {
+			fieldId = 1
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoArgs) writeField1(oprot thrift.TProtocol) (err error) {
+	if err = oprot.WriteFieldBegin("req", thrift.STRUCT, 1); err != nil {
+		goto WriteFieldBeginError
+	}
+	if err := p.Req.Write(oprot); err != nil {
+		return err
+	}
+	if err = oprot.WriteFieldEnd(); err != nil {
+		goto WriteFieldEndError
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoArgs) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SrvUpdateUserInfoArgs(%+v)", *p)
+
+}
+
+func (p *SrvUpdateUserInfoArgs) DeepEqual(ano *SrvUpdateUserInfoArgs) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field1DeepEqual(ano.Req) {
+		return false
+	}
+	return true
+}
+
+func (p *SrvUpdateUserInfoArgs) Field1DeepEqual(src *UpdateUserInfoRequest) bool {
+
+	if !p.Req.DeepEqual(src) {
+		return false
+	}
+	return true
+}
+
+type SrvUpdateUserInfoResult struct {
+	Success *UpdateUserInfoResponse `thrift:"success,0,optional" frugal:"0,optional,UpdateUserInfoResponse" json:"success,omitempty"`
+}
+
+func NewSrvUpdateUserInfoResult() *SrvUpdateUserInfoResult {
+	return &SrvUpdateUserInfoResult{}
+}
+
+func (p *SrvUpdateUserInfoResult) InitDefault() {
+	*p = SrvUpdateUserInfoResult{}
+}
+
+var SrvUpdateUserInfoResult_Success_DEFAULT *UpdateUserInfoResponse
+
+func (p *SrvUpdateUserInfoResult) GetSuccess() (v *UpdateUserInfoResponse) {
+	if !p.IsSetSuccess() {
+		return SrvUpdateUserInfoResult_Success_DEFAULT
+	}
+	return p.Success
+}
+func (p *SrvUpdateUserInfoResult) SetSuccess(x interface{}) {
+	p.Success = x.(*UpdateUserInfoResponse)
+}
+
+var fieldIDToName_SrvUpdateUserInfoResult = map[int16]string{
+	0: "success",
+}
+
+func (p *SrvUpdateUserInfoResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *SrvUpdateUserInfoResult) Read(iprot thrift.TProtocol) (err error) {
+
+	var fieldTypeId thrift.TType
+	var fieldId int16
+
+	if _, err = iprot.ReadStructBegin(); err != nil {
+		goto ReadStructBeginError
+	}
+
+	for {
+		_, fieldTypeId, fieldId, err = iprot.ReadFieldBegin()
+		if err != nil {
+			goto ReadFieldBeginError
+		}
+		if fieldTypeId == thrift.STOP {
+			break
+		}
+
+		switch fieldId {
+		case 0:
+			if fieldTypeId == thrift.STRUCT {
+				if err = p.ReadField0(iprot); err != nil {
+					goto ReadFieldError
+				}
+			} else if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		default:
+			if err = iprot.Skip(fieldTypeId); err != nil {
+				goto SkipFieldError
+			}
+		}
+		if err = iprot.ReadFieldEnd(); err != nil {
+			goto ReadFieldEndError
+		}
+	}
+	if err = iprot.ReadStructEnd(); err != nil {
+		goto ReadStructEndError
+	}
+
+	return nil
+ReadStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct begin error: ", p), err)
+ReadFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
+ReadFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_SrvUpdateUserInfoResult[fieldId]), err)
+SkipFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
+
+ReadFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read field end error", p), err)
+ReadStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoResult) ReadField0(iprot thrift.TProtocol) error {
+	p.Success = NewUpdateUserInfoResponse()
+	if err := p.Success.Read(iprot); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *SrvUpdateUserInfoResult) Write(oprot thrift.TProtocol) (err error) {
+	var fieldId int16
+	if err = oprot.WriteStructBegin("UpdateUserInfo_result"); err != nil {
+		goto WriteStructBeginError
+	}
+	if p != nil {
+		if err = p.writeField0(oprot); err != nil {
+			fieldId = 0
+			goto WriteFieldError
+		}
+	}
+	if err = oprot.WriteFieldStop(); err != nil {
+		goto WriteFieldStopError
+	}
+	if err = oprot.WriteStructEnd(); err != nil {
+		goto WriteStructEndError
+	}
+	return nil
+WriteStructBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct begin error: ", p), err)
+WriteFieldError:
+	return thrift.PrependError(fmt.Sprintf("%T write field %d error: ", p, fieldId), err)
+WriteFieldStopError:
+	return thrift.PrependError(fmt.Sprintf("%T write field stop error: ", p), err)
+WriteStructEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoResult) writeField0(oprot thrift.TProtocol) (err error) {
+	if p.IsSetSuccess() {
+		if err = oprot.WriteFieldBegin("success", thrift.STRUCT, 0); err != nil {
+			goto WriteFieldBeginError
+		}
+		if err := p.Success.Write(oprot); err != nil {
+			return err
+		}
+		if err = oprot.WriteFieldEnd(); err != nil {
+			goto WriteFieldEndError
+		}
+	}
+	return nil
+WriteFieldBeginError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 begin error: ", p), err)
+WriteFieldEndError:
+	return thrift.PrependError(fmt.Sprintf("%T write field 0 end error: ", p), err)
+}
+
+func (p *SrvUpdateUserInfoResult) String() string {
+	if p == nil {
+		return "<nil>"
+	}
+	return fmt.Sprintf("SrvUpdateUserInfoResult(%+v)", *p)
+
+}
+
+func (p *SrvUpdateUserInfoResult) DeepEqual(ano *SrvUpdateUserInfoResult) bool {
+	if p == ano {
+		return true
+	} else if p == nil || ano == nil {
+		return false
+	}
+	if !p.Field0DeepEqual(ano.Success) {
+		return false
+	}
+	return true
+}
+
+func (p *SrvUpdateUserInfoResult) Field0DeepEqual(src *UpdateUserInfoResponse) bool {
 
 	if !p.Success.DeepEqual(src) {
 		return false

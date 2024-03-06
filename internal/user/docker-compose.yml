@@ -11,13 +11,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: mysecret
     volumes:
-      - ../../script/lark.sql:/docker-entrypoint-initdb.d/init.sql
+      - ../../script/sql/lark/lark.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "3306:3306"
   user_service:
     build:
       context: ../../
       dockerfile: internal/user/Dockerfile
+    environment:
+      - MODE=production
+      - TZ=Asia/Shanghai
     depends_on:
       - db
       - redis

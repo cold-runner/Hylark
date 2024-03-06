@@ -22,7 +22,7 @@ create table lark
     age             tinyint      null comment '用户年龄',
     photo_url       varchar(255) null comment '照片url',
     email           varchar(255) unique null comment '邮箱地址',
-    introduce       text         null comment '用户个人介绍',
+    introduction       text         null comment '用户个人介绍',
     avatar          varchar(255) default 'https://static.skylab.org.cn/default/avatar.png' null comment '用户头像url',
     qq_union_id     varchar(255) unique null comment 'qq社会化登录',
     wechat_union_id varchar(255) unique null comment '微信社会化登录',

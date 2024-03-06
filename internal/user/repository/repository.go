@@ -11,4 +11,5 @@ type Repository interface {
 
 type LarkRepository interface {
 	Persist(c context.Context, lark *model.Lark) error
+	Update(c context.Context, lark *model.Lark) error
 }

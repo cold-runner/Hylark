@@ -32,7 +32,7 @@ type Lark struct {
 	Age           int32          `gorm:"column:age;type:tinyint(4);comment:用户年龄" json:"age"`                                                                    // 用户年龄
 	PhotoURL      string         `gorm:"column:photo_url;type:varchar(255);comment:照片url" json:"photo_url"`                                                     // 照片url
 	Email         string         `gorm:"column:email;type:varchar(255);comment:邮箱地址" json:"email"`                                                              // 邮箱地址
-	Introduce     string         `gorm:"column:introduce;type:text;comment:用户个人介绍" json:"introduce"`                                                            // 用户个人介绍
+	Introduction  string         `gorm:"column:introduction;type:text;comment:用户个人介绍" json:"introduction"`                                                      // 用户个人介绍
 	Avatar        *string        `gorm:"column:avatar;type:varchar(255);default:https://static.skylab.org.cn/default/avatar.png;comment:用户头像url" json:"avatar"` // 用户头像url
 	QqUnionID     string         `gorm:"column:qq_union_id;type:varchar(255);comment:qq社会化登录" json:"qq_union_id"`                                               // qq社会化登录
 	WechatUnionID string         `gorm:"column:wechat_union_id;type:varchar(255);comment:微信社会化登录" json:"wechat_union_id"`                                       // 微信社会化登录

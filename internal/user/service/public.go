@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"github.com/golang-jwt/jwt/v5"
 
 	"github.com/pkg/errors"
 )
@@ -19,4 +20,9 @@ func (s *Srv) validateSmsCode(ctx context.Context, phone, smsCode string) (bool,
 		return false, errors.Errorf("sms code is incorrect. phone: %v, cached: %v, recv: %v", phone, cachedCode, smsCode)
 	}
 	return true, nil
+}
+
+type HylarkTokenClaims struct {
+	UUID string `json:"uuid"`
+	jwt.RegisteredClaims
 }
