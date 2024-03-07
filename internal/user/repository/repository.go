@@ -24,3 +24,7 @@ type SocialRepository interface {
 type SocialRepository interface {
 	Persist(c context.Context, row *model.UserInteraction) error
 }
+
+type SocialRepository interface {
+	Persist(c context.Context, row *model.UserInteraction) error
+}
